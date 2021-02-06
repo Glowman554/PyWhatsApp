@@ -5,7 +5,7 @@ from commands import *
 from whatsapp import *
 
 options = Options()
-options.add_argument("user-data-dir=crome/.")
+options.add_argument("user-data-dir=chrome/.")
 
 driver = webdriver.Chrome("chromedriver.exe", options=options)
 driver.get("https://web.whatsapp.com/")
