@@ -16,14 +16,14 @@ class WhatsApp:
         options.add_argument("user-data-dir=chrome/" + data_dir)
 
         if headless:
-            options.add_argument("--headless")
-            options.add_argument("--disable-gpu")
+            from pyvirtualdisplay import Display
+            display = Display(visible=0, size=(800, 600))
+            display.start()
+
         if driver_path is None:
             self.driver = webdriver.Chrome(options=options)
         else:
             self.driver = webdriver.Chrome(driver_path, options=options)
-        if headless:
-            self.driver.set_window_size(1120, 550)
 
     def start(self):
         self.driver.get("https://web.whatsapp.com/")
