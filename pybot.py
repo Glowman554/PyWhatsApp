@@ -14,7 +14,10 @@ class WhatsApp:
         options = Options()
         options.add_argument("user-data-dir=chrome/" + data_dir)
         options.headless = headless
-        self.driver = webdriver.Chrome(driver_path, options=options)
+        if driver_path is None:
+            self.driver = webdriver.Chrome(options=options)
+        else:
+            self.driver = webdriver.Chrome(driver_path, options=options)
 
     def start(self):
         self.driver.get("https://web.whatsapp.com/")
