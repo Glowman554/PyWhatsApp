@@ -11,11 +11,7 @@ class WhatsApp:
     def __init__(self, data_dir: str, driver_path: str, idle_chat: str, headless: bool):
         self.commands = {}
         self.idle_chat = idle_chat
-
-        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
-
         options = Options()
-        options.add_argument(f"user-agent={user_agent}")
         options.add_argument("user-data-dir=chrome/" + data_dir)
         if headless:
             options.add_argument("--headless")
