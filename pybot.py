@@ -12,6 +12,9 @@ class WhatsApp:
         self.commands = {}
         self.idle_chat = idle_chat
         options = Options()
+
+        user_aget = "Mozilla/5.0 (X11; CrOS x86_64 13597.66.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.109 Safari/537.36"
+
         options.add_argument("user-data-dir=chrome/" + data_dir)
         if headless:
             options.add_argument("--headless")
