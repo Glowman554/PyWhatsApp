@@ -13,7 +13,7 @@ class WhatsApp:
         self.idle_chat = idle_chat
         options = Options()
 
-        user_aget = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 Edg/88.0.705.68"
+        user_aget = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
 
         options.add_argument("user-data-dir=chrome/" + data_dir)
         options.add_argument(f"user-agent={user_aget}")
