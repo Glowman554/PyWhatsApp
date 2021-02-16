@@ -18,6 +18,8 @@ class WhatsApp:
             self.driver = webdriver.Chrome(options=options)
         else:
             self.driver = webdriver.Chrome(driver_path, options=options)
+        if headless:
+            self.driver.set_window_size(1120, 550)
 
     def start(self):
         self.driver.get("https://web.whatsapp.com/")
