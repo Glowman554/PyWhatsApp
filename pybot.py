@@ -17,6 +17,7 @@ class WhatsApp:
 
         if headless:
             options.add_argument("--headless")
+            options.add_argument("--disable-gpu")
         if driver_path is None:
             self.driver = webdriver.Chrome(options=options)
         else:
