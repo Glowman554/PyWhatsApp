@@ -13,7 +13,9 @@ class WhatsApp:
         self.idle_chat = idle_chat
         options = Options()
         options.add_argument("user-data-dir=chrome/" + data_dir)
-        options.headless = headless
+        if headless:
+            options.add_argument("--headless")
+            options.add_argument("--disable-gpu")
         if driver_path is None:
             self.driver = webdriver.Chrome(options=options)
         else:
