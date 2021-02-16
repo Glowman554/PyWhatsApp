@@ -8,11 +8,12 @@ from selenium.webdriver.chrome.options import Options
 
 class WhatsApp:
 
-    def __init__(self, data_dir: str, driver_path: str, idle_chat: str):
+    def __init__(self, data_dir: str, driver_path: str, idle_chat: str, headless: bool):
         self.commands = {}
         self.idle_chat = idle_chat
         options = Options()
         options.add_argument("user-data-dir=chrome/" + data_dir)
+        options.headless = headless
         self.driver = webdriver.Chrome(driver_path, options=options)
 
     def start(self):

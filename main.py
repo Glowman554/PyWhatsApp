@@ -1,7 +1,7 @@
 from commands import *
 from pybot import WhatsApp
 
-w = WhatsApp(".", "chromedriver.exe", "Idle")
+w = WhatsApp(".", "chromedriver.exe", "Idle", False)
 w.start()
 
 w.register_command("!help", help_command)
