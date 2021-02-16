@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 commands = {}
 
+
 def goto_idle(driver: WebDriver):
     return select_chat(driver, "Idle")
 
@@ -62,36 +63,44 @@ def wait_for_message(driver: WebDriver) -> str:
 
 def get_user_and_time(driver: WebDriver) -> str:
     try:
-        user = driver.find_elements_by_xpath("//span[@dir='{}']".format("ltr"))[-1].find_element_by_xpath("./../..").get_attribute("data-pre-plain-text")
+        user = driver.find_elements_by_xpath("//span[@dir='{}']".format("ltr"))[-1].find_element_by_xpath(
+            "./../..").get_attribute("data-pre-plain-text")
         return user
     except:
         pass
 
+
 def command(driver: WebDriver, message: str) -> (bool, str):
     pass
 
+
 def help_command(driver: WebDriver, message: str) -> (bool, str):
     if len(message.split(" ")) != 1:
-        return (True, "OMG Not like that")
+        return True, "OMG Not like that"
 
     msg = ""
     for i in commands:
         msg += ">> " + i + "\n"
 
-    return (True, msg)
+    return True, msg
+
 
 def register_command(what: str, handler: command):
     commands[what] = handler;
-    print("Registrating command", what)
+    print("[Setup] Register command", what)
+
 
 def on_message(driver: WebDriver, message: str):
-    command = message.split(" ")[0]
+    curr_command = message.split(" ")[0]
 
     for i in commands:
-        if i == command:
+        if i == curr_command:
+            print("[Command] Executing command " + curr_command)
             is_response, what = commands[i](driver, message)
             if is_response:
+                print("[Command] Sending response " + what)
                 send_message_current_chat(driver, what)
+
 
 def mainloop(driver: WebDriver):
     while True:
