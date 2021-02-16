@@ -11,6 +11,7 @@ w.register_command("!hello", hello_command)
 #w.register_command("!SPAM", spam_command)
 w.register_command("!say", say_command)
 w.register_command("!emote", emote_command)
+w.register_command("!whois", whois_command)
 
 
 w.mainloop()

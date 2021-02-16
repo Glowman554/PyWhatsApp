@@ -100,10 +100,16 @@ class WhatsApp:
         for i in self.commands:
             if i == curr_command:
                 logging.warning("[" + self.get_user() + "] Executing command " + curr_command)
-                is_response, what = self.commands[i](self, message)
-                if is_response:
-                    logging.warning("Sending response " + what)
-                    self.send_message_current_chat(what)
+                try:
+                    if not len(message.split(" ")) < 1:
+                        is_response, what = self.commands[i](self, " ".join(message.split(" ")[1:len(message.split(" "))]), len(message.split(" ")) - 1)
+                    else:
+                        is_response, what = self.commands[i](self, None, 0)
+                    if is_response:
+                        logging.warning("Sending response " + what)
+                        self.send_message_current_chat(what)
+                except Exception as e:
+                    self.send_message_current_chat("Internal error: " + str(e))
 
     def mainloop(self):
         while True:
