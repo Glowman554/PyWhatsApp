@@ -2,6 +2,7 @@ import json
 import urllib.request
 
 import random
+from time import sleep
 
 from pybot import WhatsApp, WhatsAppStyle
 
@@ -189,3 +190,77 @@ def blacklist_get_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bo
     if arg_len < 1:
         return True, "OMG Not like that"
     return True, "Blacklist of " + message + " is: " + str(whatsapp.get_blacklist(message))
+
+
+def kill_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len != 0:
+        return True, "OMG Not like that"
+
+    whatsapp.send_message_current_chat("Im going to sleep now")
+
+    sleep(1)
+
+    whatsapp.driver.quit()
+    exit(0)
+
+
+def user_info_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if arg_len < 1:
+        return True, "OMG Not like that"
+
+    msg = "Userinfo for " + message + "\n"
+    msg += "Permission: " + str(whatsapp.get_perms(message)) + "\n"
+    msg += "Blacklist: " + str(whatsapp.get_blacklist(message)) + "\n"
+
+    ws = WhatsAppStyle(whatsapp)
+    ws.typewriter(msg)
+    ws.send()
+
+    return False, ""
+
+
+def join_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+
+    user = whatsapp.get_user()
+
+    if not message.__contains__("https://chat.whatsapp.com/"):
+        return True, "Not a valid group"
+
+    ws = WhatsAppStyle(whatsapp)
+    ws.typewriter("Joining group: " + message.replace("https://chat.whatsapp.com/", ""))
+    ws.send()
+
+    sleep(1)
+
+    message = message.replace("https://chat.whatsapp.com/", "https://web.whatsapp.com/accept?code=")
+    whatsapp.driver.get(message)
+
+    found = False
+
+    while not found:
+        try:
+            join_button = whatsapp.driver.find_element_by_xpath("//div[text()='Gruppe beitreten']")
+            sleep(5)
+            join_button.click()
+            found = True
+        except:
+            pass
+
+    sleep(2)
+
+    try:
+        ws.typewriter("Hello world " + user + " added me")
+        ws.send()
+    except:
+        pass
+
+    while not whatsapp.select_chat(whatsapp.idle_chat):
+        sleep(0.5)
+
+    return False, ""

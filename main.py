@@ -22,6 +22,9 @@ w.register_command("#crash", crash_command)
 w.register_command("#crash->info", crash_info_command)
 w.register_command("#msg", msg_command)
 w.register_command("#random", random_command)
+w.register_command("#kill", kill_command)
+w.register_command("#userinfo", user_info_command)
+w.register_command("#join", join_command)
 
 w.mainloop()
 
