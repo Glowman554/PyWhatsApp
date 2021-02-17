@@ -1,11 +1,17 @@
 import json
+import logging
+import random
+import traceback
 from time import sleep
 
-import logging
+from datetime import datetime
 
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 
+import platform
 
 class WhatsApp:
 
@@ -37,7 +43,6 @@ class WhatsApp:
         self.driver.quit()
         logging.warning("Stopping")
 
-
     def select_chat(self, where: str) -> bool:
         try:
             user = self.driver.find_element_by_xpath(f"//span[@title='{where}']")
@@ -58,13 +63,13 @@ class WhatsApp:
             return False
 
     def send_message_current_chat(self, what: str) -> bool:
-            try:
-                box = self.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[2]/div/div[2]")
-                box.send_keys(what)
-                self.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[3]/button").click()
-                return True
-            except:
-                return False
+        try:
+            box = self.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[2]/div/div[2]")
+            box.send_keys(what)
+            self.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[3]/button").click()
+            return True
+        except:
+            return False
 
     def get_last_message(self) -> str:
         try:
@@ -119,14 +124,35 @@ class WhatsApp:
                 logging.warning("[" + self.get_user() + "] Executing command " + curr_command)
                 try:
                     if not len(message.split(" ")) < 1:
-                        is_response, what = self.commands[i](self, " ".join(message.split(" ")[1:len(message.split(" "))]), len(message.split(" ")) - 1)
+                        is_response, what = self.commands[i](self,
+                                                             " ".join(message.split(" ")[1:len(message.split(" "))]),
+                                                             len(message.split(" ")) - 1)
                     else:
                         is_response, what = self.commands[i](self, None, 0)
                     if is_response:
                         logging.warning("Sending response " + what)
                         self.send_message_current_chat(what)
                 except Exception as e:
-                    self.send_message_current_chat("Internal error: " + str(e))
+                    exc = traceback.format_exc()
+                    crash_id = str(hex(random.randint(0, 100000000)))
+
+                    crash_report = exc + "\n"
+                    crash_report += "User: " + self.get_user() + ", Permissions: " + str(self.get_perms(self.get_user())) + "\n"
+                    crash_report += "Platform: " + platform.platform() + "\n"
+                    crash_report += "Processor: " + platform.processor() + "\n"
+                    crash_report += "Machine: " + platform.machine() + "\n"
+                    crash_report += "Time: " + str(datetime.now()) + "\n"
+
+
+                    with open(crash_id, "w") as file:
+                        file.write(crash_report)
+                        file.flush()
+
+                    ws = WhatsAppStyle(self)
+                    ws.typewriter(exc)
+                    ws.fat("Saving crash report: " + crash_id)
+                    ws.italic("User: " + self.get_user() + ", Permissions: " +str( self.get_perms(self.get_user())))
+                    ws.send()
 
     def mainloop(self):
         while True:
@@ -138,3 +164,30 @@ class WhatsApp:
             logging.info(user + " " + message)
             self.handle_message(message)
             self.select_chat(self.idle_chat)
+
+
+class WhatsAppStyle:
+    def __init__(self, w: WhatsApp):
+        self.whatsapp = w
+
+    def format_print(self, what: str):
+        box = self.whatsapp.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[2]/div/div[2]")
+
+        for i in what.split("\n"):
+            box.send_keys(i)
+            ActionChains(self.whatsapp.driver).key_down(Keys.SHIFT).key_down(Keys.ENTER).key_up(Keys.SHIFT).perform()
+
+    def italic(self, what: str):
+        self.format_print("_" + what + "_")
+
+    def strikethrough(self, what: str):
+        self.format_print("~" + what + "~")
+
+    def fat(self, what: str):
+        self.format_print("*" + what + "*")
+
+    def typewriter(self, what: str):
+        self.format_print("```" + what + "```")
+
+    def send(self):
+        self.whatsapp.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[3]/button").click()
