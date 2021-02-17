@@ -1,6 +1,8 @@
 import json
 import urllib.request
 
+import random
+
 from pybot import WhatsApp, WhatsAppStyle
 
 
@@ -61,7 +63,10 @@ def spam_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
 def say_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if arg_len < 1:
         return True, "OMG Not like that"
-    return True, message
+    ws = WhatsAppStyle(whatsapp)
+    ws.format_print(message)
+    ws.send()
+    return False, ""
 
 
 def emote_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
@@ -151,3 +156,36 @@ def msg_command(whatsapp: WhatsApp, message: str, arg_len: int):
     whatsapp.send_message(message.split("->")[0], message.split("->")[1])
 
     return False, ""
+
+
+def random_command(whatsapp: WhatsApp, message: str, arg_len: int):
+    if arg_len != 1:
+        return True, "OMG Not like that"
+
+    return True, "Your random number is: " + str(random.randint(0, int(message)))
+
+
+def blacklist_add_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+    whatsapp.set_blacklist(message, True)
+    return True, "Changed blacklist of " + message + " to True"
+
+
+def blacklist_remove_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+    whatsapp.set_blacklist(message, False)
+    return True, "Changed blacklist of " + message + " to False"
+
+
+def blacklist_get_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+    return True, "Blacklist of " + message + " is: " + str(whatsapp.get_blacklist(message))

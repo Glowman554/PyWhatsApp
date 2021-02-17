@@ -15,9 +15,13 @@ w.register_command("#whois", whois_command)
 w.register_command("#perm->add", perms_add_command)
 w.register_command("#perm->remove", perms_remove_command)
 w.register_command("#perm->get", perms_get_command)
+w.register_command("#blacklist->add", blacklist_add_command)
+w.register_command("#blacklist->remove", blacklist_remove_command)
+w.register_command("#blacklist->get", blacklist_get_command)
 w.register_command("#crash", crash_command)
 w.register_command("#crash->info", crash_info_command)
 w.register_command("#msg", msg_command)
+w.register_command("#random", random_command)
 
 w.mainloop()
 

@@ -105,7 +105,7 @@ class WhatsApp:
             pass
 
     def get_perms(self, user: str) -> bool:
-        with open("config.json") as file:
+        with open("perms.json") as file:
             obj = json.loads(file.read())
             try:
                 return obj[user]
@@ -113,10 +113,26 @@ class WhatsApp:
                 return False
 
     def set_perms(self, user: str, what: bool):
-        with open("config.json") as file:
+        with open("perms.json") as file:
             obj = json.loads(file.read())
         obj[user] = what
-        with open("config.json", "w") as file:
+        with open("perms.json", "w") as file:
+            file.write(json.dumps(obj))
+            file.flush()
+
+    def get_blacklist(self, user: str) -> bool:
+        with open("blacklist.json") as file:
+            obj = json.loads(file.read())
+            try:
+                return obj[user]
+            except:
+                return False
+
+    def set_blacklist(self, user: str, what: bool):
+        with open("blacklist.json") as file:
+            obj = json.loads(file.read())
+        obj[user] = what
+        with open("blacklist.json", "w") as file:
             file.write(json.dumps(obj))
             file.flush()
 
@@ -131,6 +147,8 @@ class WhatsApp:
             if i == curr_command:
                 logging.warning("[" + self.get_user() + "] Executing command " + curr_command)
                 try:
+                    if self.get_blacklist(self.get_user()):
+                        return
                     if not len(message.split(" ")) < 1:
                         is_response, what = self.commands[i](self,
                                                              " ".join(message.split(" ")[1:len(message.split(" "))]),
