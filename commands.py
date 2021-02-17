@@ -48,8 +48,12 @@ def hello_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str)
 
 
 def spam_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
     if arg_len != 1:
         return True, "OMG Not like that"
+    if int(message) > 26:
+        return True, "Please don't spam to much"
 
     for i in range(0, int(message)):
         whatsapp.send_message_current_chat("SPAM " + str(i))
@@ -84,4 +88,30 @@ def emote_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str)
 def whois_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if arg_len != 0:
         return True, "OMG Not like that"
-    return True, whatsapp.get_user()
+    return True, "User: " + whatsapp.get_user() + ", Permissions: " + str(whatsapp.get_perms(whatsapp.get_user()))
+
+
+def perms_add_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+    whatsapp.set_perms(message, True)
+    return True, "Changed permission of " + message + " to True"
+
+
+def perms_remove_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+    whatsapp.set_perms(message, False)
+    return True, "Changed permission of " + message + " to False"
+
+
+def perms_get_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+    return True, "Permission of " + message + " is: " + str(whatsapp.get_perms(message))

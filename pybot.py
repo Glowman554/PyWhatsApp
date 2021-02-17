@@ -1,3 +1,4 @@
+import json
 from time import sleep
 
 import logging
@@ -89,6 +90,22 @@ class WhatsApp:
             return user
         except:
             pass
+
+    def get_perms(self, user: str) -> bool:
+        with open("config.json") as file:
+            obj = json.loads(file.read())
+            try:
+                return obj[user]
+            except:
+                return False
+
+    def set_perms(self, user: str, what: bool):
+        with open("config.json") as file:
+            obj = json.loads(file.read())
+        obj[user] = what
+        with open("config.json", "w") as file:
+            file.write(json.dumps(obj))
+            file.flush()
 
     def register_command(self, what: str, handler):
         self.commands[what] = handler
