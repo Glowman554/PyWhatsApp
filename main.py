@@ -17,6 +17,7 @@ w.register_command("#perm->remove", perms_remove_command)
 w.register_command("#perm->get", perms_get_command)
 w.register_command("#crash", crash_command)
 w.register_command("#crash->info", crash_info_command)
+w.register_command("#msg", msg_command)
 
 w.mainloop()
 

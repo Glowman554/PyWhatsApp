@@ -136,3 +136,18 @@ def crash_info_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool,
     ws.send()
 
     return False, ""
+
+
+def msg_command(whatsapp: WhatsApp, message: str, arg_len: int):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+
+    ws = WhatsAppStyle(whatsapp)
+    ws.typewriter("Sending '" + message.split("->")[1] + "' to " + message.split("->")[0])
+    ws.send()
+
+    whatsapp.send_message(message.split("->")[0], message.split("->")[1])
+
+    return False, ""

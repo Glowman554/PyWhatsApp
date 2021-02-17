@@ -86,7 +86,15 @@ class WhatsApp:
                 sleep(0.1)
                 return self.get_last_message()
             except:
-                pass
+                for i in range(2, 99):
+                    try:
+                        msg = self.driver.find_element_by_xpath("//span[@aria-label='{}']".format(f"{i} ungelesene Nachrichten"))
+                        msg.click()
+                        sleep(0.1)
+                        return self.get_last_message()
+                    except:
+                        pass
+
 
     def get_user(self) -> str:
         try:
@@ -138,6 +146,7 @@ class WhatsApp:
 
                     crash_report = exc + "\n"
                     crash_report += "User: " + self.get_user() + ", Permissions: " + str(self.get_perms(self.get_user())) + "\n"
+                    crash_report += "Command: " + message + "\n"
                     crash_report += "Platform: " + platform.platform() + "\n"
                     crash_report += "Processor: " + platform.processor() + "\n"
                     crash_report += "Machine: " + platform.machine() + "\n"
@@ -148,10 +157,19 @@ class WhatsApp:
                         file.write(crash_report)
                         file.flush()
 
+                    user = self.get_user()
+
                     ws = WhatsAppStyle(self)
-                    ws.typewriter(exc)
+                    ws.typewriter("Internal error: " + str(e))
                     ws.fat("Saving crash report: " + crash_id)
-                    ws.italic("User: " + self.get_user() + ", Permissions: " +str( self.get_perms(self.get_user())))
+                    ws.italic("User: " + user + ", Permissions: " +str(self.get_perms(user)))
+                    ws.send()
+
+                    self.select_chat(self.idle_chat)
+
+                    ws.typewriter("Internal error: " + str(e))
+                    ws.fat("Saving crash report: " + crash_id)
+                    ws.italic("User: " + user + ", Permissions: " +str(self.get_perms(user)))
                     ws.send()
 
     def mainloop(self):
