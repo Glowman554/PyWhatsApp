@@ -10,14 +10,16 @@ from pybot import WhatsApp, WhatsAppStyle
 def help_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if arg_len != 0:
         return True, "OMG Not like that"
-
-    msg = ""
-    for i in whatsapp.commands:
-        msg += ">> " + i + "\n"
-
     ws = WhatsAppStyle(whatsapp)
-    ws.format_print(msg)
+
+    for x in whatsapp.command_types:
+        ws.fat(x)
+        for y in whatsapp.command_types[x]:
+            ws.typewriter(">> " + y)
+        ws.format_print("")
+
     ws.send()
+
 
     return False, ""
 

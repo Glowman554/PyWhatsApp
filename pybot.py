@@ -17,6 +17,7 @@ class WhatsApp:
 
     def __init__(self, data_dir: str, driver_path: str, idle_chat: str, headless: bool):
         self.commands = {}
+        self.command_types = {}
         self.idle_chat = idle_chat
         options = Options()
 
@@ -136,8 +137,11 @@ class WhatsApp:
             file.write(json.dumps(obj))
             file.flush()
 
-    def register_command(self, what: str, handler):
+    def register_command(self, what: str, type: str, handler):
         self.commands[what] = handler
+        if not type in self.command_types:
+            self.command_types[type] = []
+        self.command_types[type].append(what)
         logging.info("Register command " + what)
 
     def handle_message(self, message: str):
