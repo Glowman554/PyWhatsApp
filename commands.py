@@ -2,7 +2,7 @@ import json
 import urllib.request
 
 import random
-from time import sleep
+from time import sleep, time
 
 from pybot import WhatsApp, WhatsAppStyle
 
@@ -44,7 +44,11 @@ def wikipedia_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, 
 def hello_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if arg_len != 0:
         return True, "OMG Not like that"
-    return True, "Hello " + whatsapp.get_user()
+    ws = WhatsAppStyle(whatsapp)
+    ws.type("Hello ")
+    ws.tag(whatsapp.get_user())
+    ws.send()
+    return False, ""
 
 
 def spam_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
@@ -210,11 +214,13 @@ def user_info_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, 
     if arg_len < 1:
         return True, "OMG Not like that"
 
-    msg = "Userinfo for " + message + "\n"
-    msg += "Permission: " + str(whatsapp.get_perms(message)) + "\n"
+    msg = "Permission: " + str(whatsapp.get_perms(message)) + "\n"
     msg += "Blacklist: " + str(whatsapp.get_blacklist(message)) + "\n"
 
     ws = WhatsAppStyle(whatsapp)
+    ws.type("Userinfo for ")
+    ws.tag(message)
+    ws.format_print("\n")
     ws.typewriter(msg)
     ws.send()
 
@@ -243,10 +249,15 @@ def join_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
 
     found = False
 
+    start_ts = time()
+
     while not found:
+        if start_ts + 30 < time():
+            whatsapp.start()
+            return True, "Something terrible happened\nI cant join the group " + message
         try:
             join_button = whatsapp.driver.find_element_by_xpath("//div[text()='Gruppe beitreten']")
-            sleep(5)
+            sleep(1)
             join_button.click()
             found = True
         except:
@@ -255,7 +266,9 @@ def join_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     sleep(2)
 
     try:
-        ws.typewriter("Hello world " + user + " added me")
+        ws.type("Hello world ")
+        ws.tag(user)
+        ws.type("added me")
         ws.send()
     except:
         pass

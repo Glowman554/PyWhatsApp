@@ -213,6 +213,10 @@ class WhatsAppStyle:
             box.send_keys(i)
             ActionChains(self.whatsapp.driver).key_down(Keys.SHIFT).key_down(Keys.ENTER).key_up(Keys.SHIFT).perform()
 
+    def type(self, what: str):
+        box = self.whatsapp.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[2]/div/div[2]")
+        box.send_keys(what)
+
     def italic(self, what: str):
         self.format_print("_" + what + "_")
 
@@ -224,6 +228,10 @@ class WhatsAppStyle:
 
     def typewriter(self, what: str):
         self.format_print("```" + what + "```")
+
+    def tag(self, who: str):
+        box = self.whatsapp.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[2]/div/div[2]")
+        box.send_keys("@" + who + "\t")
 
     def send(self):
         self.whatsapp.driver.find_element_by_xpath("//*[@id='main']/footer/div[1]/div[3]/button").click()
