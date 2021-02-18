@@ -277,10 +277,3 @@ def join_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
         sleep(0.5)
 
     return False, ""
-
-
-def reload_code():
-    from os import execl
-    from sys import executable, argv
-
-    execl(executable, executable, *argv)
