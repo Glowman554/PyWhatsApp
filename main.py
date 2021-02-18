@@ -4,6 +4,7 @@ from pybot import WhatsApp
 w = WhatsApp(".", "chromedriver.exe", "Idle", False)
 w.start()
 
+w.register_command("#reload", reload_code)
 w.register_command("#help", help_command)
 w.register_command("#ping", ping_command)
 w.register_command("#wikipedia", wikipedia_command)
