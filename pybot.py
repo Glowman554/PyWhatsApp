@@ -13,7 +13,6 @@ from selenium.webdriver.common.keys import Keys
 
 import platform
 
-
 class WhatsApp:
 
     def __init__(self, data_dir: str, driver_path: str, idle_chat: str, headless: bool):
@@ -96,6 +95,7 @@ class WhatsApp:
                     except:
                         pass
 
+
     def get_user(self) -> str:
         try:
             user = self.driver.find_elements_by_xpath("//span[@dir='{}']".format("ltr"))[-1].find_element_by_xpath(
@@ -170,6 +170,7 @@ class WhatsApp:
                     crash_report += "Machine: " + platform.machine() + "\n"
                     crash_report += "Time: " + str(datetime.now()) + "\n"
 
+
                     with open(crash_id, "w") as file:
                         file.write(crash_report)
                         file.flush()
@@ -179,14 +180,14 @@ class WhatsApp:
                     ws = WhatsAppStyle(self)
                     ws.typewriter("Internal error: " + str(e))
                     ws.fat("Saving crash report: " + crash_id)
-                    ws.italic("User: " + user + ", Permissions: " + str(self.get_perms(user)))
+                    ws.italic("User: " + user + ", Permissions: " +str(self.get_perms(user)))
                     ws.send()
 
                     self.select_chat(self.idle_chat)
 
                     ws.typewriter("Internal error: " + str(e))
                     ws.fat("Saving crash report: " + crash_id)
-                    ws.italic("User: " + user + ", Permissions: " + str(self.get_perms(user)))
+                    ws.italic("User: " + user + ", Permissions: " +str(self.get_perms(user)))
                     ws.send()
 
     def mainloop(self):
