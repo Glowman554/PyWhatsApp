@@ -4,6 +4,18 @@ from pybot import WhatsApp
 w = WhatsApp(".", "chromedriver.exe", "Idle", False)
 w.start()
 
+
+def reloadBot(*args, **kwargs):
+    def reloadBotInside():
+        from importlib import reload
+        from sys import modules
+
+        reload(modules[kwargs["module"] if "module" in kwargs else "commands"])
+
+    return reloadBotInside()
+
+
+w.register_command("#reload", "Admin commands", reloadBot)
 w.register_command("#help", "Basics", help_command)
 w.register_command("#ping", "Basics", ping_command)
 w.register_command("#wikipedia", "Basics", wikipedia_command)
