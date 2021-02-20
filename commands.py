@@ -20,7 +20,6 @@ def help_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
 
     ws.send()
 
-
     return False, ""
 
 
