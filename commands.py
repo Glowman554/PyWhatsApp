@@ -55,13 +55,19 @@ def hello_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str)
 def spam_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if not whatsapp.get_perms(whatsapp.get_user()):
         return True, "You can't do that"
-    if arg_len != 1:
+    if arg_len < 1:
         return True, "OMG Not like that"
-    if int(message) > 26:
+    if int(message.split("->")[1]) > 500:
         return True, "Please don't spam to much"
 
-    for i in range(0, int(message)):
-        whatsapp.send_message_current_chat("SPAM " + str(i))
+    ws = WhatsAppStyle(whatsapp)
+
+    for i in range(0, int(message.split("->")[1])):
+
+        ws.type("SPAM ")
+        ws.tag(message.split("->")[0])
+        ws.type(" " + str(i))
+        ws.send()
 
     return False, ""
 
