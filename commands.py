@@ -84,7 +84,7 @@ def spam_file_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, 
             if i.strip():
                 ws.type(i)
                 ws.send()
-
+    return True, "Spam done!"
 
 def say_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if arg_len < 1:
