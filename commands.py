@@ -71,6 +71,20 @@ def spam_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
 
     return False, ""
 
+def spam_file_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
+    if not whatsapp.get_perms(whatsapp.get_user()):
+        return True, "You can't do that"
+    if arg_len < 1:
+        return True, "OMG Not like that"
+
+    ws = WhatsAppStyle(whatsapp)
+
+    with open(message) as file:
+        for i in file.read().split("\n"):
+            if i.strip():
+                ws.type(i)
+                ws.send()
+
 
 def say_command(whatsapp: WhatsApp, message: str, arg_len: int) -> (bool, str):
     if arg_len < 1:
